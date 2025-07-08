@@ -54,25 +54,22 @@ export const useAppStore = create<AppState>((set, get) => ({
   signIn: async (email: string, password: string) => {
     set({ loading: true });
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (error) throw error;
-      
-      // In a real app, you'd fetch the user profile here
-      const mockUser: Profile = {
-        id: data.user.id,
-        email: data.user.email!,
-        role: 'admin',
-        full_name: 'Admin User',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      
-      set({ user: mockUser });
-      return true;
+      // Mock authentication for demo purposes
+      if (email === 'admin@example.com' && password === 'password') {
+        const mockUser: Profile = {
+          id: 'demo-user-id',
+          email: 'admin@example.com',
+          role: 'admin',
+          full_name: 'Admin User',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        
+        set({ user: mockUser });
+        return true;
+      } else {
+        throw new Error('Invalid login credentials');
+      }
     } catch (error) {
       console.error('Sign in error:', error);
       return false;
