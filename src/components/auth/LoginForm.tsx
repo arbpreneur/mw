@@ -9,13 +9,18 @@ import { useAppStore } from '@/lib/store';
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { signIn, loading } = useAppStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
     
-    await signIn(email, password);
+    setError('');
+    const success = await signIn(email, password);
+    if (!success) {
+      setError('Invalid email or password. Please try again.');
+    }
   };
 
   return (
@@ -63,6 +68,12 @@ export const LoginForm: React.FC = () => {
                 />
               </div>
             </div>
+            
+            {error && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                {error}
+              </div>
+            )}
             
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In'}
